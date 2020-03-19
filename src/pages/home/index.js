@@ -38,7 +38,7 @@ class Home extends Component {
 				/** @type {import('../../controller/timeCalc').Factory[]} */
 				const items = result.map(CalcFactory)
 				console.log(items[0])
-				
+
 				// this.setState({ items })
 
 
@@ -123,6 +123,7 @@ class Home extends Component {
 			cardData: {
 				...item.cardData,
 				currentTime: moment.utc().utcOffset(item.gameData.UTC ?? 7),
+				remainingTime: item.cardData.newDayTime.diff(item.cardData.currentTime, 'seconds')
 			},
 
 			// remainingTime: this.calcRemainingTime(
@@ -137,7 +138,8 @@ class Home extends Component {
 		const sortBy = query.get("sort");
 		if (sortBy === "name") newItems.sort((a, b) => (a.cardData.name > b.cardData.name ? 1 : -1));
 		if (sortBy === "time")
-			newItems.sort((a, b) => (a.cardData.remainingTime > b.cardData.remainingTime ? 1 : -1));
+			// USE => FIX BUG SAME TIME SWAP ALWAYS
+			newItems.sort((a, b) => (a.cardData.remainingTime >= b.cardData.remainingTime ? 1 : -1));
 		if (sortBy === "" || sortBy === null)
 			newItems.sort((a, b) => (a.cardData.id > b.cardData.id ? 1 : -1));
 

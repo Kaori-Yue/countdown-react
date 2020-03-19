@@ -42,14 +42,7 @@ class Card extends Component {
         return `${duration.days()}d ${duration.hours()}hh ${duration.minutes()}mm ${duration.seconds()}ss`
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     this.setState({
-    //         ...nextProps.data
-    //     })
-    // }
-
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(nextProps.data?.test ?? "N/A")
         return { ...nextProps.data }
     }
 
