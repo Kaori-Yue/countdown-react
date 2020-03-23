@@ -58,7 +58,7 @@ class Factory {
 		return 0
 	}
 
-	update() {
+	updateNewDay() {
 		console.log('need implements.')
 	}
 }
@@ -71,6 +71,10 @@ class EveryDay extends Factory {
 		if (diff < 0)
 			this.cardData.newDayTime.add(1, 'days')
 		this.cardData.remainingTime = this.cardData.newDayTime.diff(this.cardData.currentTime, 'seconds')
+	}
+
+	updateNewDay() {
+		return this.cardData.newDayTime.clone().add(1, 'days')
 	}
 }
 
@@ -111,6 +115,10 @@ class Step extends Factory {
 		}
 		this.cardData.newDayTime = newDay
 	}
+
+	updateNewDay() {
+		return this.cardData.newDayTime.clone().add(this.gameData.step, 'days')
+	}
 }
 
 class DayOfWeek extends Factory {
@@ -124,16 +132,34 @@ class DayOfWeek extends Factory {
 		for (const index in this.gameData.dayOfWeek) {
 			if (this.gameData.dayOfWeek.hasOwnProperty(index)) {
 				const dayBoolean = this.gameData.dayOfWeek[index];
-				console.log(`game: ${this.gameData.name} | ${dayBoolean}`)
+				// console.log(`game: ${this.gameData.name} | ${dayBoolean}`)
 				if (!dayBoolean)
 					continue
 				const newDay = this.cardData.newDayTime.clone()
-				console.log("!")
 				const diff = newDay.day(+index + round).diff(this.cardData.currentTime, 'seconds')
 				if (diff > 0) {
 					console.log(`game: ${this.gameData.name} | ${index}`)
 					this.cardData.newDayTime = newDay
 					return
+				}
+			}
+		}
+		// if this all day of week diff < 0
+		// add 1 week with 7 daya
+		this.nextEvent(7)
+	}
+
+	// !!!
+	updateNewDay(round = 0) {
+		for (const index in this.gameData.dayOfWeek) {
+			if (this.gameData.dayOfWeek.hasOwnProperty(index)) {
+				const dayBoolean = this.gameData.dayOfWeek[index];
+				if (!dayBoolean)
+					continue
+				const newDay = this.cardData.newDayTime.clone()
+				const diff = newDay.day(+index + round).diff(this.cardData.currentTime, 'seconds')
+				if (diff > 0) {
+					return newDay
 				}
 			}
 		}
